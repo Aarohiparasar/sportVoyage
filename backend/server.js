@@ -14,9 +14,10 @@ app.use(cookieParser());
 
 
 app.use(cors({
-    origin:true,
+    origin:["https://sport-voyage.vercel.app"],
     credentials: true
 }))
+
 app.use(express.json())
 
 const PORT=process.env.PORT || 5009
