@@ -1,0 +1,5 @@
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
+
+/* This file is intentionally left mostly empty.
+   All styles should be in global.css or component-specific files. */
