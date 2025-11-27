@@ -1,4 +1,4 @@
-import MyPlan from "../models/MyPlan.js";
+import MyPlan from "../Models/MyPlan.js";
 
 export const addToPlan = async (req, res) => {
   try {
