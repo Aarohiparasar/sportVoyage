@@ -69,7 +69,7 @@ function App() {
           {/* Footer always visible */}
           <Footer />
 
-          <Toaster position="top-right" />
+          <Toaster position="top-center" />
         </div>
       </AuthProvider>
     </Router>
