@@ -1,31 +1,57 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 import { User } from "../Models/userModel.js";
 
 export const AuthMiddleware = async (req, res, next) => {
   try {
+    // Get token from cookies
     const token = req.cookies.jwt;
 
     if (!token) {
-      return res.status(401).json({ error: "unauthorized: no token provided" });
+      return res.status(401).json({ 
+        success: false,
+        message: "Unauthorized: No token provided" 
+      });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    try {
+      // Verify the token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      
+      // Find user by ID from the token
+      const user = await User.findById(decoded.id).select('-password');
 
-    if (!decoded) {
-      return res.status(401).json({ error: "invalid token" });
+      if (!user) {
+        return res.status(404).json({ 
+          success: false,
+          message: "User not found" 
+        });
+      }
+
+      // Attach user to the request object
+      req.user = user;
+      next();
+      
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({ 
+          success: false,
+          message: "Session expired, please log in again" 
+        });
+      }
+      if (error.name === 'JsonWebTokenError') {
+        return res.status(401).json({ 
+          success: false,
+          message: "Invalid token" 
+        });
+      }
+      throw error; // Re-throw other errors
     }
-
-    const user = await User.findOne({ userName: decoded.userName });
-
-    if (!user) {
-      return res.status(404).json({ error: "user not found" });
-    }
-
-    req.user = user;
-    next();
 
   } catch (error) {
-    console.log(`Error in AuthMiddleware: ${error.message}`);
-    return res.status(500).json({ error: `internal server error ${error.message}` });
+    console.error('Auth Middleware Error:', error);
+    return res.status(500).json({ 
+      success: false,
+      message: "Internal server error" 
+    });
   }
 };
