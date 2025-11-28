@@ -8,8 +8,7 @@ import { useAuth } from '../context/AuthContext';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Packages = () => {
-    const {  globalPackages, setGlobalPackages} = useAuth();
-  const [loading, setLoading] = useState(true);
+    const {  globalPackages, loadingPackages} = useAuth();
   const [filters, setFilters] = useState({
     search: '',
     priceRange: [0, 10000],
@@ -17,25 +16,6 @@ const Packages = () => {
     sortBy: 'featured',
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-
-  // Fetch packages from backend
-  useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${API_URL}/packages/getPackages`);
-
-        setGlobalPackages(response.data?.packages);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching packages:', error);
-        toast.error('Failed to load packages. Please try again later.');
-        setLoading(false);
-      }
-    };
-
-    fetchPackages();
-  }, []);
 
   return (
     <div className="pt-6 pb-16 bg-gray-50 min-h-screen">
@@ -49,7 +29,7 @@ const Packages = () => {
 
         {/* Main content */}
         <div className="flex flex-col ">
-          {loading ? (
+          {loadingPackages ? (
             <div className="flex justify-center items-center col-span-2 h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
             </div>

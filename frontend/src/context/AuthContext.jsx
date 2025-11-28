@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+
 const AuthContext = createContext();
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -15,6 +16,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [globalPackages, setGlobalPackages]=useState(null)
+    const [loadingPackages, setLoadingPackages] = useState(true);
+
   const navigate = useNavigate();
 
   // Load user on first mount
@@ -38,6 +41,25 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+// Fetch packages function
+  const fetchPackages = async () => {
+    try {
+      setLoadingPackages(true);
+      const response = await axios.get(`${API_URL}/packages/getPackages`);
+      setGlobalPackages(response.data?.packages || []);
+    } catch (error) {
+      console.error('Error fetching packages:', error);
+      toast.error('Failed to load packages. Please try again later.');
+    } finally {
+      setLoadingPackages(false);
+    }
+  };
+
+  // Fetch packages on component mount
+  useEffect(() => {
+    fetchPackages();
+  }, []);
 
   // -------------------------
   // Register user
@@ -99,7 +121,8 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         clearErrors,
-        globalPackages, setGlobalPackages
+        globalPackages,
+        loadingPackages
       }}
     >
       {!loading && children}

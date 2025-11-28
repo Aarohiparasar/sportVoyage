@@ -288,7 +288,7 @@ const Home = () => {
                       <span className="text-gray-500">/person</span>
                     </div>
                     <button
-                      onClick={() => navigate(`/packages/${featuredPackage.id}`)}
+                      onClick={() => navigate(`/packages`)}
                       className="btn btn-primary"
                     >
                       View Details
@@ -327,7 +327,9 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative"    
+             onClick={() => navigate(`/packages`)}
+>
             <motion.div
               ref={scrollContainerRef}
               className="flex pb-6 overflow-x-hidden gap-6 px-2 scroll-smooth [&::-webkit-scrollbar]:hidden"

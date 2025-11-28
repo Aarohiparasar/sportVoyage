@@ -54,7 +54,7 @@ const PackageCard = ({ pkg }) => {
             <CalendarIcon className="h-4 w-4 mr-1" />
             <span>{pkg.duration}</span>
           </div>
-          <div className="text-lg font-bold text-primary">
+          <div className="text-lg font-bold text-blue-600">
             ${pkg.price.toLocaleString()}
             <span className="text-sm font-normal text-gray-500"> /person</span>
           </div>
